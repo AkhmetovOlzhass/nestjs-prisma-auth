@@ -13,8 +13,6 @@ export class EmailService {
   });
 
   async sendConfirmationEmail(email: string, link: string) {
-    console.log(link);
-
     await this.transporter.sendMail({
       from: '"Bot World" <noreply@botworld.com>',
       to: email,

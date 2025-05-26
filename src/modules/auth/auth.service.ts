@@ -26,7 +26,7 @@ export class AuthService {
           { email: existingUser.email },
           { secret: process.env.EMAIL_CONFIRM_SECRET, expiresIn: '1h' },
         );
-        const confirmLink = `https://yourfrontend.com/confirm-email?token=${token}`;
+        const confirmLink = `http://localhost:3001/confirm-email?token=${token}`;
         await this.userService.update(existingUser.id, {
           emailConfirmToken: token,
         });
@@ -52,7 +52,7 @@ export class AuthService {
       emailConfirmToken: token,
     });
 
-    const confirmLink = `https://yourfrontend.com/confirm-email?token=${token}`;
+    const confirmLink = `http://localhost:3001/confirm-email?token=${token}`;
 
     await this.emailService.sendConfirmationEmail(user.email, confirmLink);
   }
