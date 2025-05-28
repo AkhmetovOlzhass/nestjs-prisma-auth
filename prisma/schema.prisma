@@ -15,5 +15,5 @@ model User {
   emailConfirmed     Boolean  @default(false)
   emailConfirmToken  String? 
   createdAt          DateTime @default(now())
-  refreshToken       String?  
+  hashedRefresh       String?  
 }

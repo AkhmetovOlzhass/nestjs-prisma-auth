@@ -110,8 +110,11 @@ export class AuthService {
         expiresIn: '7d',
       },
     );
+
+    const hashedRefresh = await bcrypt.hash(refreshToken, 10);
+
     await this.userService.update(user.id, {
-      refreshToken,
+      hashedRefresh,
     });
     return {
       accessToken,
@@ -127,8 +130,16 @@ export class AuthService {
       });
 
       const user = await this.userService.findByEmail(payload.email);
-
       if (!user) throw new BadRequestException('User not found');
+
+      if (!user.hashedRefresh) {
+        throw new BadRequestException('No refresh token stored');
+      }
+
+      const isMatch = await bcrypt.compare(refreshToken, user.hashedRefresh);
+      if (!isMatch) {
+        throw new BadRequestException('Refresh token does not match');
+      }
 
       const newAccessToken = this.jwt.sign(
         { sub: user.id, email: user.email },
@@ -138,10 +149,6 @@ export class AuthService {
         },
       );
 
-      if (user.refreshToken !== refreshToken) {
-        throw new BadRequestException('Refresh token does not match');
-      }
-
       const newRefreshToken = this.jwt.sign(
         { sub: user.id, email: user.email },
         {
@@ -150,8 +157,10 @@ export class AuthService {
         },
       );
 
+      const newHashedRefresh = await bcrypt.hash(newRefreshToken, 10);
+
       await this.userService.update(user.id, {
-        refreshToken: newRefreshToken,
+        hashedRefresh: newHashedRefresh,
       });
 
       return {
@@ -165,7 +174,7 @@ export class AuthService {
   }
 
   async logout(userId: string): Promise<boolean> {
-    await this.userService.update(userId, { refreshToken: null });
+    await this.userService.update(userId, { hashedRefresh: null });
     return true;
   }
 }
