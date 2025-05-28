@@ -54,6 +54,22 @@ EMAIL_CONFIRM_SECRET=any-secret
 # JWT
 JWT_SECRET=your-access-secret
 JWT_REFRESH_SECRET=your-refresh-secret
+
+FRONTEND_LINK=http://localhost:3001
+
+PORT=3000
+```
+
+---
+
+## ✅ Compile and Run Migrations
+
+```bash
+# Generate Prisma client
+$ npx prisma generate
+
+# Create and apply migration
+$ npx prisma migrate dev --name init
 ```
 
 ---
@@ -66,16 +82,6 @@ $ npm run start:dev
 
 # production
 $ npm run start:prod
-```
-
-## ✅ Compile and Run Migrations
-
-```bash
-# Generate Prisma client
-$ npx prisma generate
-
-# Create and apply migration
-$ npx prisma migrate dev --name init
 ```
 
 ---

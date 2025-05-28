@@ -13,7 +13,6 @@ export class LoggerMiddleware implements NestMiddleware {
 
       let log = `[${method}] ${originalUrl} - ${statusCode} (${duration}ms)`;
 
-      // Если GraphQL
       if (originalUrl.includes('/graphql') && req.body) {
         const { operationName, query } = req.body;
         const op = operationName || query?.split('{')?.[0]?.trim();

@@ -1,4 +1,3 @@
-// src/modules/auth/auth.service.ts
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { SignupInput } from './dto/signup.input';
@@ -26,7 +25,7 @@ export class AuthService {
           { email: existingUser.email },
           { secret: process.env.EMAIL_CONFIRM_SECRET, expiresIn: '1h' },
         );
-        const confirmLink = `http://localhost:3001/confirm-email?token=${token}`;
+        const confirmLink = `${process.env.FRONTEND_LINK}/confirm-email?token=${token}`;
         await this.userService.update(existingUser.id, {
           emailConfirmToken: token,
         });
@@ -52,7 +51,7 @@ export class AuthService {
       emailConfirmToken: token,
     });
 
-    const confirmLink = `http://localhost:3001/confirm-email?token=${token}`;
+    const confirmLink = `${process.env.FRONTEND_LINK}/confirm-email?token=${token}`;
 
     await this.emailService.sendConfirmationEmail(user.email, confirmLink);
   }
